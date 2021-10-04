@@ -1,111 +1,41 @@
 # BLACK JACK - CASINO
 
 import random
-
-deck=[1,2,3,4,5,6,7,8,9,10,10,10,10,11]*4
-
-random.shuffle(deck)
-
+from bjfunc import check_hand, dealer_choice
 
 print("                       **********************************************************                                    ")
 print("                                   Welcome to the game Casino - BLACK JACK !                                         ")
 print("                       **********************************************************                                    ")
 
+deck=[1,2,3,4,5,6,7,8,9,10,10,10,10,11]*4
 
+#Initial shuffle of deck jn m
 d_cards = []                     #Initialising dealer's cards
 p_cards = []                     #Initialising player's cards
+d_hand = 0
+p_hand = 0
 
-while len(d_cards) != 2:
-	random.shuffle(deck)
+while len(d_cards) < 2:
 	d_cards.append(deck.pop())
-	if len(d_cards) == 2:
-		print('The cards dealer has are X ',d_cards[1])
-
-
-
-# Displaying the Player's cards
-while len(p_cards) != 2:
-	random.shuffle(deck)
+	d_hand = sum(d_cards)
 	p_cards.append(deck.pop())
-	if len(p_cards) == 2:
-		print("The total of player is ",sum(p_cards))
-		print("The cards Player has are  ",p_cards)
+	p_hand = sum(p_cards)
+	if len(d_cards) == 2:
+		print('The dealer is showing ', d_cards[1])
+		print("The Player has ", p_cards, " for a total of ", p_hand)
 
-
-if sum(p_cards) > 21:
-	print("You are BUSTED !\n  **************Dealer Wins !!******************\n")
-	exit()
-
-if sum(d_cards) > 21:
-	print("Dealer is BUSTED !\n   ************** You are the Winner !!******************\n")
-	exit()
-
-if sum(d_cards) == 21:
-	print("***********************Dealer is the Winner !!******************")
-	exit()
-
-if sum(d_cards) == 21 and sum(p_cards) == 21:
-	print("*****************The match is tie !!*************************")
-	exit()
-
-
-def dealer_choice():
-	if sum(d_cards) < 17:
-		while sum(d_cards) < 17:
-			random.shuffle(deck)
-			d_cards.append(deck.pop())	
-
-		
-	print("Dealer has total "+ str(sum(d_cards))+"with the cards ",d_cards)
-
-	if sum(p_cards) == sum(d_cards):
-		print("***************The match is tie !!****************")
-		exit()	
-
-
-	if sum(d_cards) == 21:
-		if sum(p_cards) < 21:
-		 print("***********************Dealer is the Winner !!******************") 
-		elif sum(p_cards) == 21:
-		 print("********************There is tie !!**************************")
-		else:
-		 print("***********************Dealer is the Winner !!******************")
-
-	elif sum(d_cards) <21:
-		if sum(p_cards) < 21 and sum(p_cards) < sum(d_cards):
-		 print("***********************Dealer is the Winner !!******************") 
-		if sum(p_cards) == 21:
-		 print("**********************Player is winner !!**********************")
-		if sum(p_cards) < 21 and sum(p_cards) > sum(d_cards):
-		 print("**********************Player is winner !!**********************") 
-
+p_busted = check_hand(p_hand)
+while p_busted != 1:
+	k = input('Want to hit or stay?\n Type h for hit and s for stay ')
+	if k == 'h':
+		p_cards.append(deck.pop())
+		print ('You have a total of ' + str(sum(p_cards)) + ' with the cards ', p_cards)
+		p_busted = check_hand(sum(p_cards))
+		if p_busted == 1:
+			print('You BUSTED!\n Dealer Wins !!')
+			exit()
+	elif k == 's':
+		dealer_choice(d_cards, p_cards, deck)
+		break
 	else:
-		if sum(p_cards) < 21:
-		 print("**********************Player is winner !!**********************") 
-		elif sum(p_cards) == 21:
-		 print("**********************Player is winner !!**********************")
-		else:
-		 print("***********************Dealer is the Winner !!******************")
-
-
-
-
-while sum(p_cards) < 21:
-
-    k = input('Want to hit or stay?\n Press 1 for hit and 0 for stay ')
-    if k == 1:
-        random.shuffle(deck)
-        p_cards.append(deck.pop())
-        print ('You have a total of ' + str(sum(p_cards))
-               + ' with the cards ', p_cards)
-        if sum(p_cards) > 21:
-            print ('*************You are BUSTED !*************\n Dealer Wins !!')
-        if sum(p_cards) == 21:
-            print ('*******************You are the Winner !!*****************************')
-
-			
-    else:
-	    dealer_choice()
-	    break
-        
-
+		print('Please reply with a 0 or a 1.')
